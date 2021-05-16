@@ -3,25 +3,23 @@ package com.alibaba.easyexcel.test.core.encrypt;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
+import com.alibaba.easyexcel.test.core.simple.SimpleData;
+import com.alibaba.easyexcel.test.util.TestFileUtil;
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.support.ExcelTypeEnum;
+
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import com.alibaba.easyexcel.test.core.simple.SimpleData;
-import com.alibaba.easyexcel.test.core.simple.SimpleDataListener;
-import com.alibaba.easyexcel.test.core.simple.SimpleDataSheetNameListener;
-import com.alibaba.easyexcel.test.util.TestFileUtil;
-import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.support.ExcelTypeEnum;
-import com.alibaba.excel.util.FileUtils;
-
 /**
- *
  * @author Jiaju Zhuang
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -31,6 +29,15 @@ public class EncryptDataTest {
     private static File file03;
     private static File file07OutputStream;
     private static File file03OutputStream;
+
+    @Test
+    public void testformat() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        decimalFormat.setRoundingMode(RoundingMode.HALF_UP);
+        BigDecimal bigDecimal = new BigDecimal("0.105");
+
+        System.out.println(decimalFormat.format(bigDecimal));
+    }
 
     @BeforeClass
     public static void init() {
@@ -51,12 +58,12 @@ public class EncryptDataTest {
     }
 
     @Test
-    public void t01ReadAndWriteStream07() throws Exception {
+    public void t03ReadAndWriteStream07() throws Exception {
         readAndWriteStream(file07OutputStream, ExcelTypeEnum.XLSX);
     }
 
     @Test
-    public void t02ReadAndWriteStream03() throws Exception {
+    public void t04ReadAndWriteStream03() throws Exception {
         readAndWriteStream(file03OutputStream, ExcelTypeEnum.XLS);
     }
 
@@ -72,8 +79,8 @@ public class EncryptDataTest {
         fileOutputStream.close();
 
         FileInputStream fileInputStream = new FileInputStream(file);
-        EasyExcel.read(fileInputStream, EncryptData.class, new EncryptDataListener()).password("123456")
-            .excelType(excelType).sheet().doRead();
+        EasyExcel.read(fileInputStream, EncryptData.class, new EncryptDataListener()).password("123456").sheet()
+            .doRead();
     }
 
     private List<SimpleData> data() {
